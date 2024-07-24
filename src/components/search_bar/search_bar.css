@@ -1,0 +1,27 @@
+.text-input {
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: #c9c9c9;
+    }
+  }
+}
+
+.filter {
+  background-color: #129575 !important;
+  color: white !important;
+  border-radius: 10px !important;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 22;
+}

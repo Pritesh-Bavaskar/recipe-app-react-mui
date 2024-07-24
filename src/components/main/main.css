@@ -1,0 +1,111 @@
+.main {
+  font-family: "Poppins";
+  font-style: normal;
+  padding-top: 25px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 22;
+}
+
+.title {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 30px;
+  color: #000000;
+}
+.subtitle {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 16px;
+  color: #a9a9a9;
+}
+
+.button {
+  font-weight: bold !important;
+  background: #129575;
+  border-radius: 10px !important;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 5px !important;
+}
+
+.filter {
+  background-color: #129575 !important;
+  color: white !important;
+  border-radius: 10px !important;
+  padding-left: 10%;
+}
+
+.profile {
+  background: #ffce80 !important;
+  border-radius: 10px !important;
+  width: 40px;
+  height: 40px;
+}
+
+.text-input {
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: #c9c9c9;
+    }
+  }
+}
+
+.recipe-row {
+  margin-top: 30px;
+  display: flex;
+  overflow-x: auto;
+  padding-top: 10px;
+  scroll-behavior: smooth;
+}
+
+.recipe-row::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-button {
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  cursor: pointer;
+  z-index: 1;
+  padding: 10px;
+  font-size: 20px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-button.left {
+  left: 0px;
+}
+
+.scroll-button.right {
+  right: 00px;
+}
+
+.scroll-button:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
