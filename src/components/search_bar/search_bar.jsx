@@ -29,7 +29,7 @@ const SearchBar = ({
       <Box display="flex" alignItems="center" mt={3} onClick={handleSearchPage}>
         <TextField
           variant="outlined"
-          placeholder="Search recipe"
+          placeholder="Type and hit search to find recipes..."
           fullWidth
           value={searchQuery}
           className="text-input"
