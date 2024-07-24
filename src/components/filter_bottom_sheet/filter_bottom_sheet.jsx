@@ -54,6 +54,19 @@ const FilterBottomSheet = ({
             alignItems={"start"}
             flexWrap={"wrap"}
           >
+            <Button
+              variant="outlined"
+              className="outline-button"
+              onClick={() => handleClickCatHigh("all")}
+              style={{
+                backgroundColor:
+                  selectedCategory === "all" ? "#129575" : "white",
+                color: selectedCategory === "all" ? "white" : "#129575",
+                borderColor: "#129575",
+              }}
+            >
+              All
+            </Button>
             {categories
               ? categories.map((res, i) => (
                   <Button
@@ -88,6 +101,18 @@ const FilterBottomSheet = ({
             alignItems={"start"}
             flexWrap={"wrap"}
           >
+            <Button
+              variant="outlined"
+              className="outline-button"
+              onClick={() => handleClickAreaHigh("all")}
+              style={{
+                backgroundColor: selectedArea === "all" ? "#129575" : "white",
+                color: selectedArea === "all" ? "white" : "#129575",
+                borderColor: "#129575",
+              }}
+            >
+              All
+            </Button>
             {areas
               ? areas.map((res, i) => (
                   <Button

@@ -29,16 +29,16 @@ const Search = () => {
             result2.some((item2) => item2.strMeal === item1.strMeal)
           );
           setRecipes(result);
-          console.log("res1:", result);
+          // console.log("res1:", result);
         } else if (result3 != null && result2 == null) {
           const result = result1.filter((item1) =>
             result3.some((item3) => item3.strMeal === item1.strMeal)
           );
           setRecipes(result);
-          console.log(result);
+          // console.log(result);
         } else if (result2 == null && result3 == null) {
           setRecipes(result1);
-          console.log(result1);
+          // console.log(result1);
         } else {
           const result = result1.filter(
             (item1) =>
@@ -46,7 +46,7 @@ const Search = () => {
               result3.some((item3) => item3.strMeal === item1.strMeal)
           );
           setRecipes(result);
-          console.log(result);
+          // console.log(result);
         }
       } else {
         setRecipes([]);
@@ -67,7 +67,7 @@ const Search = () => {
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
     handleSearchQuery(searchQue);
-    console.log("searchQue: ", searchQue);
+    // console.log("searchQue: ", searchQue);
   };
 
   return (
