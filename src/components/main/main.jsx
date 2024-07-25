@@ -108,7 +108,11 @@ const Main = () => {
         </Box>
       </Box>
 
-      <SearchBar openSearchComponent={true} searchQue={handleSearchQue} />
+      <SearchBar
+        autoFocus={false}
+        openSearchComponent={true}
+        searchQue={handleSearchQue}
+      />
 
       <Box position="relative">
         <Box

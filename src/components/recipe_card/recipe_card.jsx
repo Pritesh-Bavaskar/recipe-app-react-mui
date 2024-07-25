@@ -40,7 +40,7 @@ const RecipeCard = ({ title, time, rating, image }) => {
           sx={{ ml: "-27px", mb: "30px" }}
         >
           <Star sx={{ height: "15px", color: "#FFAD30" }} />
-          <box>{rating}</box>
+          <Box>{rating}</Box>
         </Typography>
       </Box>
       <Box className="recipe-card-content">

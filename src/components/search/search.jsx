@@ -4,7 +4,11 @@ import "./search.css";
 import arrow_left from "../../assets/arrow-left.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useCallback } from "react";
-import { getRecipesByCategory, getRecipesBySearch } from "../../api";
+import {
+  getRecipesByCategory,
+  getRecipesBySearch,
+  getRecipesByArea,
+} from "../../api";
 import RecipeCardSearch from "../recipe_card_search/recipe_card_search";
 import FilterBottomSheet from "../filter_bottom_sheet/filter_bottom_sheet";
 import debounce from "lodash/debounce";
@@ -21,7 +25,7 @@ const Search = () => {
     debounce(async (searchQuery) => {
       const result1 = await getRecipesBySearch(searchQuery);
       const result2 = await getRecipesByCategory(selectedCategory);
-      const result3 = await getRecipesByCategory(selectedArea);
+      const result3 = await getRecipesByArea(selectedArea);
 
       if (result1 != null) {
         if (result2 != null && result3 == null) {
@@ -29,16 +33,13 @@ const Search = () => {
             result2.some((item2) => item2.strMeal === item1.strMeal)
           );
           setRecipes(result);
-          // console.log("res1:", result);
         } else if (result3 != null && result2 == null) {
           const result = result1.filter((item1) =>
             result3.some((item3) => item3.strMeal === item1.strMeal)
           );
           setRecipes(result);
-          // console.log(result);
         } else if (result2 == null && result3 == null) {
           setRecipes(result1);
-          // console.log(result1);
         } else {
           const result = result1.filter(
             (item1) =>
@@ -46,12 +47,11 @@ const Search = () => {
               result3.some((item3) => item3.strMeal === item1.strMeal)
           );
           setRecipes(result);
-          // console.log(result);
         }
       } else {
-        setRecipes([]);
+        setRecipes([""]);
       }
-    }, 100),
+    }, 1000),
     [selectedCategory, selectedArea]
   );
 
@@ -67,7 +67,6 @@ const Search = () => {
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
     handleSearchQuery(searchQue);
-    // console.log("searchQue: ", searchQue);
   };
 
   return (
@@ -95,6 +94,7 @@ const Search = () => {
         <Box></Box>
       </Box>
       <SearchBar
+        autoFocus={true}
         openSearchComponent={false}
         searchQue={handleSearchQuery}
         handleOpenBottomSheet={handleOpenBottomSheet}
