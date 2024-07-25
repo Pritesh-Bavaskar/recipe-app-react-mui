@@ -18,6 +18,8 @@ const SearchBar = ({
   autoFocus,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [placeholderText, setPlaceholderText] = useState("Search recipes...");
+
   const textRef = useRef();
   const navigate = useNavigate();
 
@@ -34,6 +36,10 @@ const SearchBar = ({
       textRef.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    setPlaceholderText(listening ? "Listening..." : "Search recipes...");
+  }, [listening]);
 
   useEffect(() => {
     setSearchQuery(transcript);
@@ -74,12 +80,12 @@ const SearchBar = ({
   }
 
   return (
-    <Container>
+    <Box>
       <Box display="flex" alignItems="center" mt={3} onClick={handleSearchPage}>
         <TextField
           inputRef={textRef}
           variant="outlined"
-          placeholder="Search recipes..."
+          placeholder={placeholderText}
           fullWidth
           value={searchQuery}
           className="text-input"
@@ -131,7 +137,7 @@ const SearchBar = ({
           />
         </IconButton>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

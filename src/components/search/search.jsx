@@ -12,6 +12,7 @@ import {
 import RecipeCardSearch from "../recipe_card_search/recipe_card_search";
 import FilterBottomSheet from "../filter_bottom_sheet/filter_bottom_sheet";
 import debounce from "lodash/debounce";
+import LoaderSpinner from "../loader_spinner/loader_spinner";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -20,36 +21,48 @@ const Search = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedArea, setSelectedArea] = useState("all");
   const [searchQue, setSearchQue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const debouncedSearch = useCallback(
     debounce(async (searchQuery) => {
-      const result1 = await getRecipesBySearch(searchQuery);
-      const result2 = await getRecipesByCategory(selectedCategory);
-      const result3 = await getRecipesByArea(selectedArea);
-
-      if (result1 != null) {
-        if (result2 != null && result3 == null) {
-          const result = result1.filter((item1) =>
-            result2.some((item2) => item2.strMeal === item1.strMeal)
-          );
-          setRecipes(result);
-        } else if (result3 != null && result2 == null) {
-          const result = result1.filter((item1) =>
-            result3.some((item3) => item3.strMeal === item1.strMeal)
-          );
-          setRecipes(result);
-        } else if (result2 == null && result3 == null) {
-          setRecipes(result1);
-        } else {
-          const result = result1.filter(
-            (item1) =>
-              result2.some((item2) => item2.strMeal === item1.strMeal) &&
+      setLoading(true);
+      try {
+        const result1 = await getRecipesBySearch(searchQuery);
+        const result2 = await getRecipesByCategory(selectedCategory);
+        const result3 = await getRecipesByArea(selectedArea);
+        if (result1 != null) {
+          if (result2 != null && result3 == null) {
+            const result = result1.filter((item1) =>
+              result2.some((item2) => item2.strMeal === item1.strMeal)
+            );
+            setRecipes(result);
+            // console.log("result:", result);
+          } else if (result3 != null && result2 == null) {
+            const result = result1.filter((item1) =>
               result3.some((item3) => item3.strMeal === item1.strMeal)
-          );
-          setRecipes(result);
+            );
+            setRecipes(result);
+            // console.log("result:", result);
+          } else if (result2 == null && result3 == null) {
+            setRecipes(result1);
+            // console.log("result:", result1);
+          } else {
+            const result = result1.filter(
+              (item1) =>
+                result2.some((item2) => item2.strMeal === item1.strMeal) &&
+                result3.some((item3) => item3.strMeal === item1.strMeal)
+            );
+            setRecipes(result);
+            // console.log("result:", result);
+          }
+        } else {
+          setRecipes([]);
+          // console.log("result:", recipes);
         }
-      } else {
-        setRecipes([""]);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     }, 1000),
     [selectedCategory, selectedArea]
@@ -99,32 +112,37 @@ const Search = () => {
         searchQue={handleSearchQuery}
         handleOpenBottomSheet={handleOpenBottomSheet}
       />
-      {recipes.length !== 0 ? (
-        <>
-          <Box className="search-result">
-            <Typography fontWeight={"bold"}>Search Result</Typography>
-            <Typography color={"#A9A9A9"} fontSize={"14px"}>
-              {recipes.length} results
-            </Typography>
+      <Box position="relative" minHeight="400px">
+        {loading ? (
+          <LoaderSpinner />
+        ) : recipes && recipes.length ? (
+          <>
+            <Box className="search-result">
+              <Typography fontWeight={"bold"}>Search Result</Typography>
+              <Typography color={"#A9A9A9"} fontSize={"14px"}>
+                {recipes.length} results
+              </Typography>
+            </Box>
+            <Grid container spacing={0} justifyContent="center">
+              {recipes.map((recipe, index) => (
+                <Grid item key={index} m={"-15px"}>
+                  <RecipeCardSearch recipe={recipe} />
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        ) : (
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            mt={"50px"}
+          >
+            <Typography fontWeight={"bold"}>No Results Found</Typography>
           </Box>
-          <Grid container spacing={0} justifyContent="center">
-            {recipes.map((recipe, index) => (
-              <Grid item key={index} m={"-15px"}>
-                <RecipeCardSearch recipe={recipe} />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-      ) : (
-        <Box
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mt={"50px"}
-        >
-          <Typography fontWeight={"bold"}>No Results Found</Typography>
-        </Box>
-      )}
+        )}
+      </Box>
+
       {isBottomSheetOpen && (
         <Box className="overlay" onClick={handleCloseBottomSheet}>
           <FilterBottomSheet

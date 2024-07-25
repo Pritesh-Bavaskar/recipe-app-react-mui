@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Typography, Box, IconButton, Button } from "@mui/material";
 import RecipeCard from "../recipe_card/recipe_card";
+import LoaderSpinner from "../loader_spinner/loader_spinner";
 import "./main.css";
 import user_img from "../../assets/user.png";
 
@@ -17,15 +18,22 @@ const Main = () => {
   const [highlighted, setHighlighted] = useState("all");
   const [recipes, setRecipes] = useState([]);
   const [recipesArea, setRecipesArea] = useState([]);
-
   const [specificCategory, setSpecificCategory] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const categoryListData = await getListAllCategories();
-      setRecipes(categoryListData);
-      const allReceipesbyAreaData = await getRecipesByArea("Chinese");
-      setRecipesArea(allReceipesbyAreaData);
+      setLoading(true);
+      try {
+        const categoryListData = await getListAllCategories();
+        setRecipes(categoryListData);
+        const allReceipesbyAreaData = await getRecipesByArea("Chinese");
+        setRecipesArea(allReceipesbyAreaData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -33,12 +41,19 @@ const Main = () => {
   useEffect(() => {
     if (recipes.length > 0) {
       const fetchSpecificCategoryData = async () => {
-        const promises = recipes.map((recipe) =>
-          getRecipesByCategory(recipe.strCategory)
-        );
-        const results = await Promise.all(promises);
-        const flattenedResults = results.flat();
-        setSpecificCategory(flattenedResults);
+        setLoading(true);
+        try {
+          const promises = recipes.map((recipe) =>
+            getRecipesByCategory(recipe.strCategory)
+          );
+          const results = await Promise.all(promises);
+          const flattenedResults = results.flat();
+          setSpecificCategory(flattenedResults);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
       };
 
       fetchSpecificCategoryData();
@@ -51,18 +66,25 @@ const Main = () => {
 
   const handleClick = (id) => {
     setHighlighted(id);
+    setLoading(true);
     let allCatData = [];
     const fetchData = async () => {
-      if (id !== "all") {
-        const allCategoryData = await getRecipesByCategory(id);
-        setSpecificCategory(allCategoryData);
-      } else {
-        const promises = recipes.map((recipe) =>
-          getRecipesByCategory(recipe.strCategory)
-        );
-        const results = await Promise.all(promises);
-        allCatData = results.flat();
-        setSpecificCategory(allCatData);
+      try {
+        if (id !== "all") {
+          const allCategoryData = await getRecipesByCategory(id);
+          setSpecificCategory(allCategoryData);
+        } else {
+          const promises = recipes.map((recipe) =>
+            getRecipesByCategory(recipe.strCategory)
+          );
+          const results = await Promise.all(promises);
+          allCatData = results.flat();
+          setSpecificCategory(allCatData);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -74,6 +96,22 @@ const Main = () => {
 
   return (
     <Container className="main">
+      {loading && (
+        <Box
+          position="fixed"
+          top={0}
+          left={0}
+          width="100%"
+          height="100%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          bgcolor="rgba(255, 255, 255, 0.8)"
+          zIndex={9999}
+        >
+          <LoaderSpinner />
+        </Box>
+      )}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -160,7 +198,6 @@ const Main = () => {
         <Box className="recipe-row" ref={scrollRef2}>
           {specificCategory
             ? specificCategory.map((res, i) => {
-                // console.log(res);
                 return (
                   <RecipeCard
                     key={i}
@@ -195,7 +232,6 @@ const Main = () => {
           >
             {recipesArea
               ? recipesArea.map((res, i) => {
-                  // console.log(res);
                   return (
                     <RecipeCardArea
                       key={i}
